@@ -9,17 +9,6 @@
 using namespace std;
 
 
-//2のべき乗を返却する関数
-int nPower2(int n){
-	int p2 = 1;		//1で初期化
-	//1から引数まで2をかけることを繰り返す
-	for(int i = 0; i < n; i++) {
-		p2 *= 2;
-	}
-	//求めたべき乗を返却
-	return p2;
-}
-
 //1の数を数える関数
 int count_bits(unsigned x) {
 	int bits = 0;
@@ -51,109 +40,58 @@ void print_bits(unsigned x) {
 }
 
 
-unsigned set_n(unsigned x, int pos, int n) {
-	int x2 = 0;
-	int nHed = int_bits();
-
-	//先頭からはじめ、posからn番目の手前まで繰り返す
-	for(int i = nHed - 1; i >= pos + n - 1; i--) {
-		//0か1か表示
-		cout << ((x >> i) & 1U ? '1' : '0');
-		//1の時その位の2のべき乗を加算
-		if((x >> i) & 1U){
-			x2 += nPower2(i);
+unsigned set_n(unsigned x, int pos, int n)
+{
+	//pos番目からn個分繰り返す
+	for(int i = pos - 1; i < pos + n; i++) {
+		//その位が1ではない時その位の分足す
+		if(!((x >> i) & 1U))	{
+			x += (1 << i);
 		}
 	}
-
-	//posからn番目からはじめ、pos番目まで繰り返し1を表示
-	for(int i = pos + n - 2; i >= pos - 1; i--) {
-		cout << "1";
-		//その桁の2のべき乗を加算
-		x2 += nPower2(i);
-	}
-
-	//pos番目の後から最後まで繰り返す
-	for(int i = pos - 2; i >= 0; i--) {
-		//0か1かを表示
-		cout << ((x >> i) & 1U ? '1' : '0');
-		//1の時その位の2のべき乗を加算
-		if((x >> i) & 1U){
-			x2 += nPower2(i);
-		}
-	}
-	//加算し終えたx2を返却
+	//出来た値をビット表記
+	print_bits(x);
+	//改行
 	cout << "\n";
-	return x2;
+	//出来た数値を返却
+	return x;
 }
 
-unsigned reset(unsigned x, int pos, int n) {
-	int x2 = 0;
-	int nHed = int_bits();
-
-	//先頭からはじめ、posからn番目手前まで繰り返す
-	for(int i = nHed - 1; i >= pos + n - 1; i--) {
-		//0か1か表示
-		cout << ((x >> i ) & 1U ? '1' : '0');
-		//1の時その位の2のべき乗を加算
-		if((x >> i) & 1U){
-			x2 += nPower2(i);
+unsigned reset_n(unsigned x, int pos, int n)
+{
+	//pos番目からn個分繰り返す
+	for(int i = pos - 1; i < pos + n; i++) {
+		//その位が１ならその位の分引く
+		if(((x >> i) & 1U))	{
+			x -= (1 << i);
 		}
 	}
-
-	//posからn番目から始め、pos番目まで繰り返し0を表示
-	for(int i = pos + n - 2; i >= pos - 1; i--) {
-		cout << "0";
-	}
-
-	//pos番目の後から最後まで繰り返す
-	for(int i = pos - 2; i >= 0; i--) {
-		//0か1かを表示
-		cout << ((x >> i) & 1U ? '1' : '0');
-		//1の時その位の2のべき乗を加算
-		if((x >> i) & 1U){
-			x2 += nPower2(i);
-		}
-	}
-	//加算し終えたx2を返却
+	//出来た数値をビット表記
+	print_bits(x);
+	//改行
 	cout << "\n";
-	return x2;
+	//出来た数値を返却
+	return x;
 }
 
-unsigned inverse(unsigned x, int pos, int n) {
-	int x2 = 0;
-	int nHed = int_bits();
-
-	//先頭からはじめ、posからn番目手前まで繰り返す
-	for(int i = nHed - 1  ; i >= pos + n - 1; i--) {
-		//0か1か表示
-		cout << ((x >> i) & 1U ? '1' : '0');
-		//1の時その位の2のべき乗を加算
-		if((x >> i) & 1U){
-			x2 += nPower2(i);
+unsigned inverse_n(unsigned x, int pos, int n)
+{
+	//pos番目からn個分繰り返す
+	for(int i = pos - 1; i < pos + n; i++) {
+		//その位が1でないならその時の位を加え
+		if(!((x >> i) & 1U))	{
+			x += (1 << i);
+		//その位が1ならその時の位の分引く
+		} else {
+			x -= (1 << i);
 		}
 	}
-
-	//posからn番目から始めpos番目まで繰り返す
-	for(int i = pos + n - 2; i >= pos - 1; i--) {
-		//繰り返す間反転して表示して1の時その位の時のべき乗を足す
-		cout << ((x >> i) & 1U ? '0' : '1');
-		if(!(x >> i & 1U)) {
-			x2 += nPower2(i);
-		}
-	}
-
-	//pos番目の後から最後まで繰り返す
-	for(int i = pos - 2; i >= 0; i--) {
-		//0か1かを表示
-		cout << ((x >> i) & 1U ? '1' : '0');
-		//1の時その位の2のべき乗を加算
-		if((x >> i) & 1U){
-			x2 += nPower2(i);
-		}
-	}
-	//加算し終えたx2を返却
+	//出来た数値についてビット表記
+	print_bits(x);
+	//改行
 	cout << "\n";
-	return x2;
+	//出来た数値を返却
+	return x;
 }
 
 
@@ -176,7 +114,7 @@ int main()
 
 	//入力された値分それぞれシフトした値を表示
 	cout << set_n(a,nSet,nNumber) << "\n";
-	cout << reset(a,nSet,nNumber) << "\n";
-	cout << inverse(a,nSet,nNumber) << "\n";
+	cout << reset_n(a,nSet,nNumber) << "\n";
+	cout << inverse_n(a,nSet,nNumber) << "\n";
 
 }
