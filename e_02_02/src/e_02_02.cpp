@@ -8,17 +8,6 @@
 #include<iostream>
 using namespace std;
 
-//2のべき乗を返却する関数
-int nPower2(int n){
-	int p2 = 1;		//1で初期化
-	//1から引数まで2をかけることを繰り返す
-	for(int i = 1; i < n; i++) {
-		p2 *= 2;
-	}
-	//求めたべき乗を返却
-	return p2;
-}
-
 //1の数を数える関数
 int count_bits(unsigned x) {
 	int bits = 0;
@@ -51,68 +40,32 @@ void print_bits(unsigned x) {
 
 
 //
-unsigned rrotate(unsigned x, int n) {
-	int count = 0;			//シフトした後先頭から何個目かを数える変数
-	int b = int_bits();		//intの長さ
-	int x2 = 0;				//返却する値
-	//シフト後の先頭から最後まで繰り返す
-	for(int i = n - 1; i >= 0; i--) {
-		//0か1か表示
-		cout << ((x >> i) & 1U ? '1' : '0');
-		//1の時先頭からcount個目だと思って2のべき乗で加算
-		if((x >> i) & 1U){
-			x2 += nPower2(b - count);
-		}
-		//毎回カウントを進める
-		count++;
-	}
-
-	//先頭からシフトの個数分繰り返す
-	for(int i = int_bits() - 1; i >= n; i--) {
-		//0か1か表示
-		cout << ((x >> i) & 1U ? '1' : '0');
-		//1の時先頭からcount個目だと思って2のべき乗で加算
-		if((x >> i) & 1U){
-			x2 += nPower2(b - count);
-		}
-		//毎回カウントを進める
-		count++;
-	}
-	//加算した値を返却
+unsigned rrotate(unsigned x, int n)
+{
+	//一周以上は一緒だから長さの剰余を求める
+	n %= int_bits();
+	//シフトする部分ではない部分を左にシフトシフトしたい部分を余った分だけシフト
+	int y = (x >> n) + (x << (int_bits() - n));
+	//求めた数をビット表示
+	print_bits(y);
+	//ビット表示とその数の間を空けるため改行
 	cout << "\n";
-	return x2;
+	//求めた数を返却
+	return y;
 }
 
-unsigned lrotate(unsigned x, int n) {
-	int count = 0;			//何桁目かカウントする
-	int b = int_bits();		//intの長さ
-	int x2 = 0;				//返却する値
-
-	//シフトする先頭から始める最後まで繰り返す
-	for(int i = b - n - 1; i >= 0; i--) {
-		//0か1か表示
-		cout << ((x >> i) & 1U ? '1' : '0');
-		//1の時先頭からcount個目の2のべき乗と考えて加算
-		if((x >> i) & 1U){
-			x2 += nPower2(b - count);
-		}
-		//毎回カウントを進める
-		count++;
-	}
-
-	//シフトされる前の先頭から初めてシフトの先頭まで繰り返す
-	for(int i = b - 1; i >= b - n; i--) {
-		//0か1かを表示
-		cout << ((x >> i) & 1U ? '1' : '0');
-		//1の時先頭からcount個目の2のべき乗と考えて加算
-		if((x >> i) & 1U){
-			x2 += nPower2(b - count);
-		}
-		count++;
-	}
-	//加算し終えたx2を返却
+unsigned lrotate(unsigned x, int n)
+{
+	//長さを超えるものについては剰余と一緒
+	n %= int_bits();
+	//xをn個左へシフトしたものとあまり分右へシフトしたものを足す
+	int y = (x << n) + (x >> (int_bits() - n));
+	//出来た数値をビット表記
+	print_bits(y);
+	//表記と数値の間の改行
 	cout << "\n";
-	return x2;
+	//出来た数値を返却
+	return y;
 }
 
 
